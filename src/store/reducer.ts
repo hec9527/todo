@@ -62,11 +62,11 @@ function todoList(state: Types.TodoList = defaultList, action: AppActions) {
       return [...state, action.payload];
 
     case 'DEL_TODO_ITEM': {
-      return state.filter(i => i.title != action.payload.title);
+      return state.filter((i) => i.title != action.payload.title);
     }
     case 'CHANGE_STATUS': {
       const s = action.payload;
-      const todo = state.find(i => i.status === s.status && i.title === s.title);
+      const todo = state.find((i) => i.status === s.status && i.title === s.title);
       if (todo) {
         todo.status = todo.status === 'doing' ? 'done' : 'doing';
       }

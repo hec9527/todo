@@ -15,7 +15,7 @@ const TodoFilter: React.FC<IFilterProps> = ({ filter, setFilter }) => {
   return (
     <div className='todo-filter'>
       <div className='filter-wrap'>
-        {filters.map(f => (
+        {filters.map((f) => (
           <div key={f} className={'filter' + (f === filter ? ' checked' : '')} onClick={() => setFilter(f)}>
             {f.slice(0, 1).toUpperCase() + f.slice(1).toLowerCase()}
           </div>

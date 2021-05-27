@@ -22,18 +22,18 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
   const [left, setLeft] = useState(0);
   const x = useRef(0);
 
-  const handleMouseDown: MouseEventHandler<HTMLDivElement> = e => {
+  const handleMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     x.current = e.clientX;
   };
 
-  const handleMouseMove: MouseEventHandler<HTMLDivElement> = e => {
+  const handleMouseMove: MouseEventHandler<HTMLDivElement> = (e) => {
     if (x.current === 0) return;
     e.stopPropagation();
     setLeft(e.clientX - x.current);
   };
 
-  const handleMouseUp: DragEventHandler<HTMLDivElement> = e => {
+  const handleMouseUp: DragEventHandler<HTMLDivElement> = (e) => {
     x.current = 0;
     if (Math.abs(left) > 80) {
       setLeft(left > 0 ? 356 : -356);
@@ -46,20 +46,20 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
     }
   };
 
-  const handleTouchStart: TouchEventHandler<HTMLDivElement> = e => {
+  const handleTouchStart: TouchEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     if (e.touches.length > 1) return;
     x.current = e.touches[0].clientX;
   };
 
-  const handleTouchMove: TouchEventHandler<HTMLDivElement> = e => {
+  const handleTouchMove: TouchEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     if (e.touches.length > 1) return;
     const _x = e.touches[0].clientX;
     setLeft(_x - x.current);
   };
 
-  const handleTouchEnd: TouchEventHandler<HTMLDivElement> = e => {
+  const handleTouchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     x.current = 0;
     if (Math.abs(left) > 80) {
@@ -98,7 +98,7 @@ const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, del
   return (
     <div className='todo-list'>
       {todoList
-        .filter(todo => filter === 'all' || todo.status == filter)
+        .filter((todo) => filter === 'all' || todo.status == filter)
         .map((todo, index) => (
           <TodoItem key={todo.title + index} todo={todo} changeStatus={changeStatus} delTodo={delTodo} />
         ))}

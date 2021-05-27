@@ -13,7 +13,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   const inputRef = React.createRef<HTMLInputElement>();
   const ref = useRef<any>();
 
-  const handlePress: (this: HTMLInputElement, e: KeyboardEvent) => any = e => {
+  const handlePress: (this: HTMLInputElement, e: KeyboardEvent) => any = (e) => {
     if (e.key === 'Enter') {
       addTodo({ title, status: 'doing' });
       setTitle('');
@@ -24,9 +24,9 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   ref.current = handlePress;
 
   useEffect(() => {
-    inputRef.current?.addEventListener('keydown', e => ref.current?.(e));
+    inputRef.current?.addEventListener('keydown', (e) => ref.current?.(e));
     return () => {
-      inputRef.current?.removeEventListener('keydown', e => ref.current?.(e));
+      inputRef.current?.removeEventListener('keydown', (e) => ref.current?.(e));
     };
   }, []);
 
@@ -39,7 +39,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
         className='input'
         placeholder='Something to type in ...'
         value={title}
-        onChange={e => setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
       />
     </div>
   );
