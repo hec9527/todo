@@ -54,3 +54,7 @@ Open the file `dist/index.html` in your browser
 <img src="./images/20210527_18-31-21.png" width='auto' height='300' display='inline-block' />
 
 <img src="./images/20210527_18-31-29.png" width='auto' height='300' display='inline-block' />
+
+## LICENSE
+
+[MIT](./LICENSE)
