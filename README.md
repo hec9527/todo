@@ -1,6 +1,13 @@
-<center style="text-align:center">
-<h1>Todo</h1>
-</center>
+<div style="text-align:center;" align="center">
+
+# Todo
+
+![](svg/author-hec9527.svg)
+![](svg/license-MIT.svg)
+![](svg/ts-4.2.4.svg)
+![](svg/redux-4.1.0.svg)
+
+</div>
 
 ## 说明
 
