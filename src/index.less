@@ -1,0 +1,38 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(180deg, #a6e8fb66, #5099f366);
+  // background-image: linear-gradient(135deg, #a6e8fb66, #5099f366), linear-gradient(45deg, #f78, #abf);
+  // background: linear-gradient(45deg, #f78, #abf);
+}
+
+#app {
+  display: flex;
+}
+
+.todo-container {
+  position: relative;
+  margin: auto;
+  width: 420px;
+  height: 560px;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 20px 0px #3333;
+}
+
+@media screen and (max-width: 640px) {
+  .todo-container {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
