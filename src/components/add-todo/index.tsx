@@ -1,32 +1,28 @@
-import React, { useEffect, useState, Dispatch, useRef } from 'react';
-import { connect } from 'react-redux';
-import { AppActions } from '../../store/reducer';
-import * as Types from '../../index.d';
+import React, { useEffect, useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/reducer';
 import './index.less';
 
-interface AddTodoProps {
-  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => void;
-}
-
-const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
+const AddTodo: React.FC = () => {
   const [title, setTitle] = useState('');
   const inputRef = React.createRef<HTMLInputElement>();
-  const ref = useRef<any>();
+  const handlePressRef = useRef<any>();
+  const dispatch: AppDispatch = useDispatch();
 
   const handlePress: (this: HTMLInputElement, e: KeyboardEvent) => any = (e) => {
     if (e.key === 'Enter' && title.trim() !== '') {
-      addTodo({ title, status: 'doing' });
+      dispatch({ type: 'ADD_TODO_ITEM', payload: { title, status: 'doing' } });
       setTitle('');
     }
   };
 
   // 保存最新的引用，否则函数内部无法获取到最新的title属性
-  ref.current = handlePress;
+  handlePressRef.current = handlePress;
 
   useEffect(() => {
-    inputRef.current?.addEventListener('keydown', (e) => ref.current?.(e));
+    inputRef.current?.addEventListener('keydown', (e) => handlePressRef.current?.(e));
     return () => {
-      inputRef.current?.removeEventListener('keydown', (e) => ref.current?.(e));
+      inputRef.current?.removeEventListener('keydown', (e) => handlePressRef.current?.(e));
     };
   }, []);
 
@@ -45,13 +41,4 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   );
 };
 
-const mapStateToProps = (dispatch: Dispatch<AppActions>) => ({
-  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => {
-    dispatch({
-      type: 'ADD_TODO_ITEM',
-      payload: todo,
-    });
-  },
-});
-
-export default connect(undefined, mapStateToProps)(AddTodo);
+export default AddTodo;

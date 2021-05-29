@@ -66,6 +66,8 @@ export type AppActions =
 
 export type AppStore = ReturnType<typeof reducer>;
 
+export type AppDispatch = (action: AppActions) => void;
+
 function todoList(state: Types.TodoList = defaultList, action: AppActions) {
   switch (action.type) {
     case 'ADD_TODO_ITEM':

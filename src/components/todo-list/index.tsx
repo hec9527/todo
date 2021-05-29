@@ -1,26 +1,18 @@
-import React, { Dispatch, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
-import { AppActions, AppStore } from '../../store/reducer';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, AppStore } from '../../store/reducer';
 
 import * as Types from '../../index.d';
 import './index.less';
 
-interface TodoListProps {
-  todoList: AppStore['todoList'];
-  filter: AppStore['filter'];
-  changeStatus: (id: number) => void;
-  delTodo: (id: number) => void;
-}
-
 interface TodoItemProps {
   isScroll: boolean;
   todo: Types.TodoItem;
-  changeStatus: (id: number) => void;
-  delTodo: (id: number) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, changeStatus, delTodo, isScroll }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, isScroll }) => {
   const [left, setLeft] = useState(0);
+  const dispatch: AppDispatch = useDispatch();
   const isMoving = useRef(false);
   const x = useRef(0);
 
@@ -43,7 +35,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo(id);
+        dispatch({ type: 'DEL_TODO_ITEM', payload: id });
       }, 100);
     } else {
       setLeft(0);
@@ -71,7 +63,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo(id);
+        dispatch({ type: 'DEL_TODO_ITEM', payload: id });
       }, 300);
     } else {
       setLeft(0);
@@ -80,7 +72,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
 
   const handleTodoClick = () => {
     if (isMoving.current) return;
-    changeStatus(id);
+    dispatch({ type: 'CHANGE_STATUS', payload: id });
   };
 
   return (
@@ -107,7 +99,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
   );
 };
 
-const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, delTodo }) => {
+const TodoList: React.FC = () => {
+  const { todoList, filter } = useSelector((state: AppStore) => ({ todoList: state.todoList, filter: state.filter }));
   const [isScroll, setScroll] = useState(false);
   const timerRef = useRef<number>();
   const divRef = React.createRef<HTMLDivElement>();
@@ -132,32 +125,10 @@ const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, del
       {todoList
         .filter((todo) => filter === 'all' || todo.status == filter)
         .map((todo, index) => (
-          <TodoItem
-            key={todo.title + index}
-            isScroll={isScroll}
-            todo={todo}
-            changeStatus={changeStatus}
-            delTodo={delTodo}
-          />
+          <TodoItem key={todo.title + index} isScroll={isScroll} todo={todo} />
         ))}
     </div>
   );
 };
 
-const mapStateToProps = (state: AppStore) => ({ todoList: state.todoList, filter: state.filter });
-const mapDispatchToProps = (dispatch: Dispatch<AppActions>) => ({
-  changeStatus: (id: number) => {
-    dispatch({
-      type: 'CHANGE_STATUS',
-      payload: id,
-    });
-  },
-  delTodo: (id: number) => {
-    dispatch({
-      type: 'DEL_TODO_ITEM',
-      payload: id,
-    });
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default TodoList;
