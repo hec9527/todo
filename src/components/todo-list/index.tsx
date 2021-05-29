@@ -1,4 +1,4 @@
-import React, { Dispatch, DragEventHandler, MouseEventHandler, TouchEventHandler, useRef, useState } from 'react';
+import React, { Dispatch, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { AppActions, AppStore } from '../../store/reducer';
 
@@ -13,29 +13,31 @@ interface TodoListProps {
 }
 
 interface TodoItemProps {
+  isScroll: boolean;
   todo: Types.TodoItem;
   changeStatus: (todo: Types.TodoItem) => void;
   delTodo: (todo: Types.TodoItem) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStatus, delTodo }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStatus, delTodo, isScroll }) => {
   const [left, setLeft] = useState(0);
   const isMoving = useRef(false);
   const x = useRef(0);
 
-  const handleMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
+  const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     x.current = e.clientX;
   };
 
-  const handleMouseMove: MouseEventHandler<HTMLDivElement> = (e) => {
+  const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = (e) => {
     if (x.current === 0) return;
     e.stopPropagation();
     setLeft(e.clientX - x.current);
     isMoving.current = true;
   };
 
-  const handleMouseUp: DragEventHandler<HTMLDivElement> = (e) => {
+  const handleMouseUp: React.DragEventHandler<HTMLDivElement> = (e) => {
+    setTimeout(() => (isMoving.current = false), 0);
     x.current = 0;
     if (Math.abs(left) > 100) {
       setLeft(left > 0 ? 420 : -420);
@@ -45,24 +47,24 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
       }, 100);
     } else {
       setLeft(0);
-      setTimeout(() => (isMoving.current = false), 100);
     }
   };
 
-  const handleTouchStart: TouchEventHandler<HTMLDivElement> = (e) => {
+  const handleTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     if (e.touches.length > 1) return;
     x.current = e.touches[0].clientX;
   };
 
-  const handleTouchMove: TouchEventHandler<HTMLDivElement> = (e) => {
+  const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    if (isScroll) return;
     e.stopPropagation();
     if (e.touches.length > 1) return;
     const _x = e.touches[0].clientX;
     setLeft(_x - x.current);
   };
 
-  const handleTouchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
+  const handleTouchEnd: React.TouchEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     x.current = 0;
     if (Math.abs(left) > 100) {
@@ -77,7 +79,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
   };
 
   const handleTodoClick = () => {
-    if (isMoving) return;
+    if (isMoving.current) return;
     changeStatus({ title, status });
   };
 
@@ -106,12 +108,37 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
 };
 
 const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, delTodo }) => {
+  const [isScroll, setScroll] = useState(false);
+  const timerRef = useRef<number>();
+  const divRef = React.createRef<HTMLDivElement>();
+  const handleRef = useRef<(this: HTMLDivElement, e: HTMLElementEventMap['scroll']) => any>(() => {
+    setScroll(true);
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    } else {
+      timerRef.current = setTimeout(() => setScroll(false), 30);
+    }
+  });
+
+  useEffect(() => {
+    divRef.current?.addEventListener('scroll', handleRef.current);
+    return () => {
+      divRef.current?.removeEventListener('scroll', handleRef.current);
+    };
+  }, []);
+
   return (
-    <div className='todo-list'>
+    <div className='todo-list' ref={divRef}>
       {todoList
         .filter((todo) => filter === 'all' || todo.status == filter)
         .map((todo, index) => (
-          <TodoItem key={todo.title + index} todo={todo} changeStatus={changeStatus} delTodo={delTodo} />
+          <TodoItem
+            key={todo.title + index}
+            isScroll={isScroll}
+            todo={todo}
+            changeStatus={changeStatus}
+            delTodo={delTodo}
+          />
         ))}
     </div>
   );
