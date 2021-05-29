@@ -88,6 +88,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
