@@ -8,18 +8,18 @@ import './index.less';
 interface TodoListProps {
   todoList: AppStore['todoList'];
   filter: AppStore['filter'];
-  changeStatus: (todo: Types.TodoItem) => void;
-  delTodo: (todo: Types.TodoItem) => void;
+  changeStatus: (id: number) => void;
+  delTodo: (id: number) => void;
 }
 
 interface TodoItemProps {
   isScroll: boolean;
   todo: Types.TodoItem;
-  changeStatus: (todo: Types.TodoItem) => void;
-  delTodo: (todo: Types.TodoItem) => void;
+  changeStatus: (id: number) => void;
+  delTodo: (id: number) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStatus, delTodo, isScroll }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, changeStatus, delTodo, isScroll }) => {
   const [left, setLeft] = useState(0);
   const isMoving = useRef(false);
   const x = useRef(0);
@@ -43,7 +43,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo({ title, status });
+        delTodo(id);
       }, 100);
     } else {
       setLeft(0);
@@ -71,7 +71,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo({ title, status });
+        delTodo(id);
       }, 300);
     } else {
       setLeft(0);
@@ -80,7 +80,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
 
   const handleTodoClick = () => {
     if (isMoving.current) return;
-    changeStatus({ title, status });
+    changeStatus(id);
   };
 
   return (
@@ -146,16 +146,16 @@ const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, del
 
 const mapStateToProps = (state: AppStore) => ({ todoList: state.todoList, filter: state.filter });
 const mapDispatchToProps = (dispatch: Dispatch<AppActions>) => ({
-  changeStatus: (todo: Types.TodoItem) => {
+  changeStatus: (id: number) => {
     dispatch({
       type: 'CHANGE_STATUS',
-      payload: todo,
+      payload: id,
     });
   },
-  delTodo: (todo: Types.TodoItem) => {
+  delTodo: (id: number) => {
     dispatch({
       type: 'DEL_TODO_ITEM',
-      payload: todo,
+      payload: id,
     });
   },
 });

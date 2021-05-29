@@ -5,7 +5,7 @@ import * as Types from '../../index.d';
 import './index.less';
 
 interface AddTodoProps {
-  addTodo: (todo: Types.TodoItem) => void;
+  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => void;
 }
 
 const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
@@ -46,7 +46,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
 };
 
 const mapStateToProps = (dispatch: Dispatch<AppActions>) => ({
-  addTodo: (todo: Types.TodoItem) => {
+  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => {
     dispatch({
       type: 'ADD_TODO_ITEM',
       payload: todo,
