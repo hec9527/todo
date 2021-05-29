@@ -74,18 +74,20 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
   };
 
   return (
-    <div className='todo-item-wrap'>
+    <div
+      className='todo-item-wrap'
+      draggable={false}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div
-        style={{ transform: `translateX(${left}px)`, filter: `opacity(${1 - Math.abs(left) / 300})` }}
+        style={{ left: `${left}px`, filter: `opacity(${1 - Math.abs(left) / 300})` }}
         className={'todo-item' + (status === 'done' ? ' done' : '')}
         onClick={changeStatus.bind(undefined, { title, status })}
-        draggable={false}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         <div className='checkBox'></div>
         <p className='title'>{title}</p>
