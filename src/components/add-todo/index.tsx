@@ -14,7 +14,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   const ref = useRef<any>();
 
   const handlePress: (this: HTMLInputElement, e: KeyboardEvent) => any = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && title.trim() !== '') {
       addTodo({ title, status: 'doing' });
       setTitle('');
     }
