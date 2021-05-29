@@ -20,6 +20,7 @@ interface TodoItemProps {
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStatus, delTodo }) => {
   const [left, setLeft] = useState(0);
+  const isMoving = useRef(false);
   const x = useRef(0);
 
   const handleMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
@@ -31,18 +32,20 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
     if (x.current === 0) return;
     e.stopPropagation();
     setLeft(e.clientX - x.current);
+    isMoving.current = true;
   };
 
   const handleMouseUp: DragEventHandler<HTMLDivElement> = (e) => {
     x.current = 0;
-    if (Math.abs(left) > 80) {
-      setLeft(left > 0 ? 356 : -356);
+    if (Math.abs(left) > 100) {
+      setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
         delTodo({ title, status });
-      }, 300);
+      }, 100);
     } else {
       setLeft(0);
+      setTimeout(() => (isMoving.current = false), 100);
     }
   };
 
@@ -62,8 +65,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
   const handleTouchEnd: TouchEventHandler<HTMLDivElement> = (e) => {
     e.stopPropagation();
     x.current = 0;
-    if (Math.abs(left) > 80) {
-      setLeft(left > 0 ? 356 : -356);
+    if (Math.abs(left) > 100) {
+      setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
         delTodo({ title, status });
@@ -71,6 +74,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
     } else {
       setLeft(0);
     }
+  };
+
+  const handleTodoClick = () => {
+    if (isMoving) return;
+    changeStatus({ title, status });
   };
 
   return (
@@ -87,7 +95,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title }, changeStat
       <div
         style={{ left: `${left}px`, filter: `opacity(${1 - Math.abs(left) / 300})` }}
         className={'todo-item' + (status === 'done' ? ' done' : '')}
-        onClick={changeStatus.bind(undefined, { title, status })}
+        onClick={handleTodoClick}
       >
         <div className='checkBox'></div>
         <p className='title'>{title}</p>
