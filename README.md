@@ -38,19 +38,19 @@ cd todo
 install dependence
 
 ```zsh
-npm i
+yarn
 ```
 
 To start your server
 
 ```zsh
-npm start
+yarn start
 ```
 
 To create a production build
 
 ```zsh
-npm build-prod
+yarn build
 ```
 
 ## Running
