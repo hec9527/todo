@@ -1,0 +1,50 @@
+.todo-item {
+  display: flex;
+  position: relative;
+  height: 48px;
+  color: #777;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #b1e4f8, #efefef);
+  cursor: pointer;
+  transition: color 275ms ease-in, background 275ms ease-in;
+
+  & .checkBox {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    background: #6ca3ed;
+    border-radius: 100%;
+    transition: background 50ms ease-in-out;
+
+    &::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      margin: 2px;
+      background: #fff;
+      border-radius: 100%;
+      transition: width 100ms ease-in-out, height 100ms ease-in-out, margin 100ms ease-in-out;
+    }
+    margin-right: 8px;
+  }
+
+  &.done {
+    color: #bbb;
+    background: linear-gradient(135deg, #efefef, #efefef);
+    text-decoration: line-through;
+    & .checkBox {
+      background: transparent;
+
+      &::after {
+        width: 8px;
+        height: 8px;
+        margin: 4px;
+        background: #bbb;
+      }
+    }
+  }
+}
