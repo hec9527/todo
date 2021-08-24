@@ -60,9 +60,9 @@ Open the file `dist/index.html` in your browser
 ## screenshots
 
 <div style="display:flex;">
-<img src="./images/screenshot-pc.png" width='auto' height='300' style="margin-right:8px" />
+<img src="./images/20210824_16-58-10.png" width='auto' height='300' style="margin-right:8px" />
 
-<img src="./images/screenshot-mobile.png" width='auto' height='300' />
+<img src="./images/20210824_16-58-48.png" width='auto' height='300' />
 </div>
 
 ## LICENSE
