@@ -109,7 +109,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
 
 const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, delTodo }) => {
   const [isScroll, setScroll] = useState(false);
-  const timerRef = useRef<number>();
+  const timerRef = useRef<NodeJS.Timeout>();
   const divRef = React.createRef<HTMLDivElement>();
   const handleRef = useRef<(this: HTMLDivElement, e: HTMLElementEventMap['scroll']) => any>(() => {
     setScroll(true);
