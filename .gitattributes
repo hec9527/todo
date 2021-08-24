@@ -1,1 +1,7 @@
-* eol=lf
+*.js eol=lf
+*.ts eol=lf
+*.svg eol=lf
+*.tsx eol=lf
+*.html eol=lf
+*.less eol=lf
+*.d.ts eol=lf
