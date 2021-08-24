@@ -1,15 +1,17 @@
 import React, { useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store';
+import { delTodo, change } from '../../store/todo';
 import * as Types from '../../index.d';
 import './index.less';
 
 export interface TodoItemProps {
   isScroll: boolean;
   todo: Types.TodoItem;
-  changeStatus: (id: number) => void;
-  delTodo: (id: number) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, changeStatus, delTodo, isScroll }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, isScroll }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [left, setLeft] = useState(0);
   const isMoving = useRef(false);
   const x = useRef(0);
@@ -33,7 +35,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo(id);
+        dispatch(delTodo(id));
       }, 100);
     } else {
       setLeft(0);
@@ -61,7 +63,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo(id);
+        dispatch(delTodo(id));
       }, 300);
     } else {
       setLeft(0);
@@ -70,7 +72,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
 
   const handleTodoClick = () => {
     if (isMoving.current) return;
-    changeStatus(id);
+    dispatch(change(id));
   };
 
   return (
@@ -90,7 +92,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
         className={'todo-item' + (status === 'done' ? ' done' : '')}
         onClick={handleTodoClick}
       >
-        <div className='checkBox'></div>
+        <div className='checkBox' />
         <p className='title'>{title}</p>
       </div>
     </div>
