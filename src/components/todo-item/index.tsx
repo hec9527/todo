@@ -1,6 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import React, { useState, useRef, useEffect } from 'react';
+import { useAppDispatch } from '../../store';
 import { delTodo, change } from '../../store/todo';
 import * as Types from '../../index.d';
 import './index.less';
@@ -11,9 +10,10 @@ export interface TodoItemProps {
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, isScroll }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [left, setLeft] = useState(0);
   const isMoving = useRef(false);
+  const timerRef = useRef<number>();
   const x = useRef(0);
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -33,7 +33,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, isScro
     x.current = 0;
     if (Math.abs(left) > 100) {
       setLeft(left > 0 ? 420 : -420);
-      setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setLeft(0);
         dispatch(delTodo(id));
       }, 100);
@@ -61,7 +61,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, isScro
     x.current = 0;
     if (Math.abs(left) > 100) {
       setLeft(left > 0 ? 420 : -420);
-      setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setLeft(0);
         dispatch(delTodo(id));
       }, 300);
@@ -74,6 +74,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, isScro
     if (isMoving.current) return;
     dispatch(change(id));
   };
+
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
 
   return (
     <div

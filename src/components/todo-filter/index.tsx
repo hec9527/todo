@@ -1,6 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, AppState } from '../../store';
+import { useAppDispatch, useAppSelect } from '../../store';
 import { setFilter } from '../../store/filter';
 import * as Types from '../../index.d';
 import './index.less';
@@ -8,8 +7,8 @@ import './index.less';
 const filters: Types.TodoFilter[] = ['doing', 'done', 'all'];
 
 const TodoFilter: React.FC = () => {
-  const filter = useSelector((state: AppState) => state.filter);
-  const dispatch = useDispatch<AppDispatch>();
+  const filter = useAppSelect((s) => s.filter);
+  const dispatch = useAppDispatch();
 
   const handleClick = (filter: Types.TodoFilter) => {
     dispatch(setFilter(filter));

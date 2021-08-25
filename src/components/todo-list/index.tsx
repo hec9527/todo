@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { AppState } from '../../store';
+import { useAppSelect } from '../../store';
 import TodoItem from '../todo-item';
 import './index.less';
 
 const TodoList: React.FC = () => {
-  const [todoList, filter] = useSelector((state: AppState) => [state.todo, state.filter] as const);
+  const [todoList, filter] = useAppSelect((s) => [s.todo, s.filter] as const);
   const [isScroll, setScroll] = useState(false);
   const timerRef = useRef<number>();
   const divRef = React.createRef<HTMLDivElement>();
@@ -13,15 +12,15 @@ const TodoList: React.FC = () => {
     setScroll(true);
     if (timerRef.current) {
       clearTimeout(timerRef.current);
-    } else {
-      timerRef.current = setTimeout(() => setScroll(false), 30);
     }
+    timerRef.current = setTimeout(() => setScroll(false), 30);
   });
 
   useEffect(() => {
     divRef.current?.addEventListener('scroll', handleRef.current);
     return () => {
       divRef.current?.removeEventListener('scroll', handleRef.current);
+      timerRef.current && clearTimeout(timerRef.current);
     };
   }, []);
 

@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useAppDispatch } from '../../store';
 import { addTodo } from '../../store/todo';
 import './index.less';
 
 const AddTodo: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [title, setTitle] = useState('');
   const inputRef = React.createRef<HTMLInputElement>();
   const ref = useRef<any>();
