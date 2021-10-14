@@ -1,15 +1,16 @@
 import React, { useState, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
 import * as Types from '../../index.d';
 import './index.less';
 
 export interface TodoItemProps {
   isScroll: boolean;
   todo: Types.TodoItem;
-  changeStatus: (id: number) => void;
-  delTodo: (id: number) => void;
+  changeStatus: () => void;
+  delTodo: () => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, changeStatus, delTodo, isScroll }) => {
+const TodoItem: React.FC<TodoItemProps> = observer(({ todo: { status, title }, changeStatus, delTodo, isScroll }) => {
   const [left, setLeft] = useState(0);
   const isMoving = useRef(false);
   const x = useRef(0);
@@ -33,7 +34,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo(id);
+        delTodo();
       }, 100);
     } else {
       setLeft(0);
@@ -61,7 +62,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       setLeft(left > 0 ? 420 : -420);
       setTimeout(() => {
         setLeft(0);
-        delTodo(id);
+        delTodo();
       }, 300);
     } else {
       setLeft(0);
@@ -70,7 +71,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
 
   const handleTodoClick = () => {
     if (isMoving.current) return;
-    changeStatus(id);
+    changeStatus();
   };
 
   return (
@@ -95,6 +96,6 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo: { status, title, id }, change
       </div>
     </div>
   );
-};
+});
 
 export default TodoItem;

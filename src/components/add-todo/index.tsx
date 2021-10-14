@@ -1,21 +1,20 @@
-import React, { useEffect, useState, Dispatch, useRef } from 'react';
-import { connect } from 'react-redux';
-import { AppActions } from '../../store/reducer';
-import * as Types from '../../index.d';
+import React, { useEffect, useState, useRef } from 'react';
+import { inject } from 'mobx-react';
+import * as Types from '../../store';
 import './index.less';
 
 interface AddTodoProps {
-  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => void;
+  todo: Types.Todo;
 }
 
-const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
+const AddTodo: React.FC<AddTodoProps> = ({ todo }) => {
   const [title, setTitle] = useState('');
   const inputRef = React.createRef<HTMLInputElement>();
   const ref = useRef<any>();
 
   const handlePress: (this: HTMLInputElement, e: KeyboardEvent) => any = (e) => {
     if (e.key === 'Enter' && title.trim() !== '') {
-      addTodo({ title, status: 'doing' });
+      todo.addTodo({ title, status: 'doing' });
       setTitle('');
     }
   };
@@ -45,13 +44,4 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   );
 };
 
-const mapStateToProps = (dispatch: Dispatch<AppActions>) => ({
-  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => {
-    dispatch({
-      type: 'ADD_TODO_ITEM',
-      payload: todo,
-    });
-  },
-});
-
-export default connect(undefined, mapStateToProps)(AddTodo);
+export default inject('todo')(AddTodo);

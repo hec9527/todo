@@ -1,67 +1,52 @@
-import React, { Dispatch, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
-import { AppActions, AppStore } from '../../store/reducer';
+import React, { useEffect, useRef, useState } from 'react';
+import { inject } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import TodoItem from '../todo-item';
 import './index.less';
 
+import * as Types from '../../store';
+
 interface TodoListProps {
-  todoList: AppStore['todoList'];
-  filter: AppStore['filter'];
-  changeStatus: (id: number) => void;
-  delTodo: (id: number) => void;
+  todo: Types.Todo;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, delTodo }) => {
+const TodoList: React.FC<TodoListProps> = observer(({ todo }) => {
   const [isScroll, setScroll] = useState(false);
   const timerRef = useRef<NodeJS.Timeout>();
   const divRef = React.createRef<HTMLDivElement>();
-  const handleRef = useRef<(this: HTMLDivElement, e: HTMLElementEventMap['scroll']) => any>(() => {
-    setScroll(true);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    } else {
-      timerRef.current = setTimeout(() => setScroll(false), 30);
-    }
-  });
 
   useEffect(() => {
-    divRef.current?.addEventListener('scroll', handleRef.current);
-    return () => {
-      divRef.current?.removeEventListener('scroll', handleRef.current);
+    // 移动端滚动的时候禁止左右滑动删除todo
+    const handleScroll = () => {
+      setScroll(true);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = undefined;
+      }
+      timerRef.current = setTimeout(() => setScroll(false), 30);
     };
+
+    divRef.current?.addEventListener('scroll', handleScroll);
+    return () => divRef.current?.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className='todo-list' ref={divRef}>
-      {todoList
-        .filter((todo) => filter === 'all' || todo.status == filter)
-        .map((todo, index) => (
+      {todo.todoList
+        .filter((t) => todo.filter === 'all' || t.status == todo.filter)
+        .map((t) => (
           <TodoItem
-            key={todo.title + index}
+            key={t.id}
             isScroll={isScroll}
-            todo={todo}
-            changeStatus={changeStatus}
-            delTodo={delTodo}
+            todo={t}
+            changeStatus={() => todo.changeStatus(t)}
+            delTodo={() => todo.delTodo(t)}
           />
         ))}
     </div>
   );
-};
-
-const mapStateToProps = (state: AppStore) => ({ todoList: state.todoList, filter: state.filter });
-const mapDispatchToProps = (dispatch: Dispatch<AppActions>) => ({
-  changeStatus: (id: number) => {
-    dispatch({
-      type: 'CHANGE_STATUS',
-      payload: id,
-    });
-  },
-  delTodo: (id: number) => {
-    dispatch({
-      type: 'DEL_TODO_ITEM',
-      payload: id,
-    });
-  },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+TodoList.displayName = 'TodoItemWrap';
+
+export default inject('todo')(TodoList);

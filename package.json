@@ -1,7 +1,7 @@
 {
-  "name": "redux-test1",
+  "name": "mobx-test",
   "version": "1.0.0",
-  "description": "",
+  "description": "mobx-v6 使用测试案例",
   "main": "index.js",
   "keywords": [],
   "private": "true",
@@ -17,14 +17,17 @@
   },
   "scripts": {
     "clean": "rm dist/bundle.js",
+    "dev": "npm start",
     "start": "parcel src/index.html",
     "build": "parcel build src/index.html"
   },
   "dependencies": {
+    "classnames": "^2.3.1",
+    "mobx": "^6.3.3",
+    "mobx-react": "^7.2.0",
+    "mobx-react-lite": "^3.2.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^7.2.4",
-    "redux": "^4.1.0"
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@parcel/transformer-less": "^2.0.0-beta.3.1",
