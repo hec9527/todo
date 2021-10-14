@@ -4,22 +4,22 @@
 
 ![](svg/author-hec9527.svg)
 ![](svg/license-MIT.svg)
-![](svg/ts-4.2.4.svg)
-![](svg/redux-4.1.0.svg)
+![](svg/ts-4.4.4.svg)
+![](svg/mobx-6.3.3.svg)
+![](svg/parcel-2.0.0.svg)
 
 </div>
 
 ## 说明
 
-`todo`是一个使用 React、 Redux、 Typescript 构建的应用，该应用可以很好地帮助学习和理解 redux。搭配 Typescript，可以智能推断数据类型和智能提示。
+`todo`是一个使用 React、Typescript 构建的应用，包含项目中多种数据管理的实现方式，主要分为 redux 和 mobx 两大类以及他们各自不同版本、不同实现方式。可以 clone 仓库然后切换到其它分支查看具体实现。
 
-代码仓库中包含多个分支，每个分支都是针对 react-redux 不同使用方式组织代码结构
-
-| 分支   | 说明                                                                                 |
-| ------ | ------------------------------------------------------------------------------------ |
-| master | 使用传统的基于 connect 链接 redux 以及 react 组件的方式                              |
-| hooks  | 使用基于 hooks 的方式组织代码 `react>16.8` 并且`react-redux>7.1.0`                   |
-| RTK    | 使用基于[redux tookit](https://www.npmjs.com/package/@reduxjs/toolkit)组织的代码结构 |
+| 分支    | 说明                                                                                 |
+| ------- | ------------------------------------------------------------------------------------ |
+| master  | 使用传统的基于 connect 链接 redux 以及 react 组件的方式                              |
+| hooks   | 使用基于 hooks 的方式组织代码 `react>16.8` 并且`react-redux>7.1.0`                   |
+| RTK     | 使用基于[redux tookit](https://www.npmjs.com/package/@reduxjs/toolkit)组织的代码结构 |
+| mobx-V6 | 基于 mobx-v6 版本的数据管理实现，采用传统的 inject 方式，没有采用 hook 封装          |
 
 ## Building and running on localhost
 
@@ -27,11 +27,6 @@ clone repository to local
 
 ```zsh
 git clone https://github.com/hec9527/todo
-```
-
-change the path
-
-```zsh
 cd todo
 ```
 
