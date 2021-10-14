@@ -7,6 +7,9 @@
   "private": "true",
   "author": "hec9527",
   "license": "ISC",
+  "targets": {
+    "main": false
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hec9527/todo"
@@ -27,10 +30,10 @@
     "redux": "^4.1.0"
   },
   "devDependencies": {
-    "@parcel/transformer-less": "^2.0.0-beta.3.1",
+    "@parcel/transformer-less": "^2.0.0",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.5",
-    "parcel": "^2.0.0-beta.3.1",
+    "parcel": "^2.0.0",
     "typescript": "^4.2.4"
   }
 }
