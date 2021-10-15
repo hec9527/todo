@@ -21,6 +21,20 @@
 | RTK     | 使用基于[redux tookit](https://www.npmjs.com/package/@reduxjs/toolkit)组织的代码结构 |
 | mobx-V6 | 基于 mobx-v6 版本的数据管理实现，采用传统的 inject 方式，没有采用 hook 封装          |
 
+使用 mobx 尤其需要注意几个点
+
+1. 需要使用 mobx 数据仓库的组件需要使用 `observer` 包裹
+2. mobx 中的响应式数据，不要解构赋值，会导致其失去响应式
+   ```js
+   // 假如我们数据仓库中有如下响应字段
+   const order = {
+     orderNo: 10086951121,
+     orderPrice: 9999.99,
+     productName: 'iphone 13 1T 远峰蓝',
+   };
+   //
+   ```
+
 ## Building and running on localhost
 
 clone repository to local
