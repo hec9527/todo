@@ -25,15 +25,7 @@
 
 1. 需要使用 mobx 数据仓库的组件需要使用 `observer` 包裹
 2. mobx 中的响应式数据，不要解构赋值，会导致其失去响应式
-   ```js
-   // 假如我们数据仓库中有如下响应字段
-   const order = {
-     orderNo: 10086951121,
-     orderPrice: 9999.99,
-     productName: 'iphone 13 1T 远峰蓝',
-   };
-   //
-   ```
+3. 注意当前 mobx 的版本以及其兼容性
 
 ## Building and running on localhost
 
