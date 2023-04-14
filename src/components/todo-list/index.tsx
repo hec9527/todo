@@ -1,67 +1,60 @@
-import React, { Dispatch, useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
-import { AppActions, AppStore } from '../../store/reducer';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { todoList, filter } from '../../store';
 import TodoItem from '../todo-item';
 import './index.less';
 
-interface TodoListProps {
-  todoList: AppStore['todoList'];
-  filter: AppStore['filter'];
-  changeStatus: (id: number) => void;
-  delTodo: (id: number) => void;
-}
-
-const TodoList: React.FC<TodoListProps> = ({ todoList, filter, changeStatus, delTodo }) => {
+const TodoList: React.FC = () => {
   const [isScroll, setScroll] = useState(false);
+  const divRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout>();
-  const divRef = React.createRef<HTMLDivElement>();
-  const handleRef = useRef<(this: HTMLDivElement, e: HTMLElementEventMap['scroll']) => any>(() => {
-    setScroll(true);
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    } else {
-      timerRef.current = setTimeout(() => setScroll(false), 30);
-    }
-  });
+  const [list, setTodoList] = useRecoilState(todoList);
+  const _filter = useRecoilValue(filter);
+
+  const changeTodoItemStatus = (id: number) => {
+    setTodoList((l) =>
+      l.map((item) => {
+        if (item.id !== id) return item;
+        return { ...item, status: item.status === 'doing' ? 'done' : 'doing' };
+      })
+    );
+  };
+
+  const deleteTodoItem = (id: number) => {
+    setTodoList((l) => l.filter((item) => item.id !== id));
+  };
 
   useEffect(() => {
-    divRef.current?.addEventListener('scroll', handleRef.current);
+    const handleRef = () => {
+      setScroll(true);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      } else {
+        timerRef.current = setTimeout(() => setScroll(false), 30);
+      }
+    };
+
+    divRef.current?.addEventListener('scroll', handleRef);
     return () => {
-      divRef.current?.removeEventListener('scroll', handleRef.current);
+      divRef.current?.removeEventListener('scroll', handleRef);
     };
   }, []);
 
   return (
     <div className='todo-list' ref={divRef}>
-      {todoList
-        .filter((todo) => filter === 'all' || todo.status == filter)
+      {list
+        .filter((todo) => _filter === 'all' || todo.status == _filter)
         .map((todo, index) => (
           <TodoItem
-            key={todo.title + index}
-            isScroll={isScroll}
             todo={todo}
-            changeStatus={changeStatus}
-            delTodo={delTodo}
+            isScroll={isScroll}
+            key={todo.title + index}
+            delTodo={deleteTodoItem}
+            changeStatus={changeTodoItemStatus}
           />
         ))}
     </div>
   );
 };
 
-const mapStateToProps = (state: AppStore) => ({ todoList: state.todoList, filter: state.filter });
-const mapDispatchToProps = (dispatch: Dispatch<AppActions>) => ({
-  changeStatus: (id: number) => {
-    dispatch({
-      type: 'CHANGE_STATUS',
-      payload: id,
-    });
-  },
-  delTodo: (id: number) => {
-    dispatch({
-      type: 'DEL_TODO_ITEM',
-      payload: id,
-    });
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
+export default TodoList;

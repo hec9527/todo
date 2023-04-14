@@ -1,21 +1,17 @@
-import React, { useEffect, useState, Dispatch, useRef } from 'react';
-import { connect } from 'react-redux';
-import { AppActions } from '../../store/reducer';
-import * as Types from '../../index.d';
+import React, { useEffect, useState, useRef } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { getId, todoList } from '../../store';
 import './index.less';
 
-interface AddTodoProps {
-  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => void;
-}
-
-const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
+const AddTodo: React.FC = () => {
+  const ref = useRef<any>();
   const [title, setTitle] = useState('');
   const inputRef = React.createRef<HTMLInputElement>();
-  const ref = useRef<any>();
+  const setTodoList = useSetRecoilState(todoList);
 
   const handlePress: (this: HTMLInputElement, e: KeyboardEvent) => any = (e) => {
     if (e.key === 'Enter' && title.trim() !== '') {
-      addTodo({ title, status: 'doing' });
+      setTodoList((l) => [...l, { title, status: 'doing', id: getId() }]);
       setTitle('');
     }
   };
@@ -45,13 +41,4 @@ const AddTodo: React.FC<AddTodoProps> = ({ addTodo }) => {
   );
 };
 
-const mapStateToProps = (dispatch: Dispatch<AppActions>) => ({
-  addTodo: (todo: Omit<Types.TodoItem, 'id'>) => {
-    dispatch({
-      type: 'ADD_TODO_ITEM',
-      payload: todo,
-    });
-  },
-});
-
-export default connect(undefined, mapStateToProps)(AddTodo);
+export default AddTodo;
